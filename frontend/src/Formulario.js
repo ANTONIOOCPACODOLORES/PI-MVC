@@ -33,10 +33,13 @@ const Formulario = ({ equipos }) => {
       backgroundColor: '#f5f5f5',
       padding: '1.5rem',
       borderRadius: '30px',
-      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
       margin: '2rem auto',
       textAlign: 'center',
-      maxWidth: '420px'
+      maxWidth: '150px',
+      display:'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
     }}>
       <h2 style={{ color: '#8b1e3b', marginBottom: '1rem', fontSize: '20px' }}>
         DEMOSTRACIÓN DE PROYECTOS INTEGRADORES
