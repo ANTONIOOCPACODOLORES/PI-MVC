@@ -1,92 +1,101 @@
-  import React, { useState } from 'react';
-  import io from 'socket.io-client';
+import React, { useState } from 'react';
+import io from 'socket.io-client';
 
-  const socket = io('http://localhost:4000');
+const socket = io('http://localhost:4000');
 
-  const Formulario = ({ equipos }) => {
-    const [selectedProyecto, setSelectedProyecto] = useState('');
-    const [puntaje, setPuntaje] = useState(0);
+const Formulario = ({ equipos }) => {
+  const [selectedProyecto, setSelectedProyecto] = useState('');
+  const [puntaje, setPuntaje] = useState(0);
 
-    const handleProyectoChange = (event) => {
-      const proyectoSeleccionado = event.target.value;
-      setSelectedProyecto(proyectoSeleccionado);
+  const handleProyectoChange = (event) => {
+    const proyectoSeleccionado = event.target.value;
+    setSelectedProyecto(proyectoSeleccionado);
 
-      const proyecto = equipos.find((equipo) => equipo.name === proyectoSeleccionado);
-      if (proyecto) {
-        setPuntaje(proyecto.puntaje);
-      }
-    };
-
-    const handleAumentarPuntaje = () => {
-      if (selectedProyecto !== '') {
-        const index = equipos.findIndex((equipo) => equipo.name === selectedProyecto);
-        const proyecto = equipos[index];
-
-        if (proyecto && proyecto.puntaje < 40) {
-          socket.emit('aumentarPuntaje', index);
-        }
-      }
-    };
-
-    return (
-      <div style={{
-        backgroundColor: '#f5f5f5',
-        padding: '2rem',
-        borderRadius: '10px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        marginBottom: '2rem',
-        textAlign: 'center'
-      }}>
-        <h2 style={{ color: '#8b1e3b', marginBottom: '1.5rem' }}>
-          DEMOSTRACIÓN DE PROYECTOS INTEGRADORES
-        </h2>
-        <p style={{ fontWeight: 'bold', color: '#333', marginBottom: '1rem' }}>
-          DEL ÁREA DE TECNOLOGÍAS DE LA INFORMACIÓN
-        </p>
-
-        <label htmlFor="proyecto">Selecciona un Proyecto: </label>
-        <select
-          id="proyecto"
-          value={selectedProyecto}
-          onChange={handleProyectoChange}
-          style={{
-            padding: '10px',
-            fontSize: '16px',
-            marginLeft: '10px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            width: '200px'
-          }}
-        >
-          <option value="">Seleccionar...</option>
-          {equipos.map((equipo) => (
-            <option key={equipo.name} value={equipo.name}>
-              {equipo.name}
-            </option>
-          ))}
-        </select>
-
-        <div style={{ marginTop: '1rem' }}>
-          <strong>Puntaje alcanzado: </strong> {puntaje}
-        </div>
-
-        <button
-          onClick={handleAumentarPuntaje}
-          style={{
-            marginTop: '1rem',
-            padding: '10px 20px',
-            backgroundColor: '#8b1e3b',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px',
-          }}
-        >
-          Registrar Puntaje
-        </button>
-      </div>
-    );
+    const proyecto = equipos.find((equipo) => equipo.name === proyectoSeleccionado);
+    if (proyecto) {
+      setPuntaje(proyecto.puntaje);
+    }
   };
 
-  export default Formulario;
+  const handleAumentarPuntaje = () => {
+    if (selectedProyecto !== '') {
+      const index = equipos.findIndex((equipo) => equipo.name === selectedProyecto);
+      const proyecto = equipos[index];
+
+      if (proyecto && proyecto.puntaje < 40) {
+        socket.emit('aumentarPuntaje', index);
+      }
+    }
+  };
+
+  return (
+    <div style={{
+      backgroundColor: '#f5f5f5',
+      padding: '1.5rem',
+      borderRadius: '30px',
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+      margin: '2rem auto',
+      textAlign: 'center',
+      maxWidth: '150px',
+      display:'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    }}>
+      <h2 style={{ color: '#8b1e3b', marginBottom: '1rem', fontSize: '20px' }}>
+        DEMOSTRACIÓN DE PROYECTOS INTEGRADORES
+      </h2>
+      <p style={{ fontWeight: 'bold', color: '#333', marginBottom: '1.2rem', fontSize: '14px' }}>
+        DEL ÁREA DE TECNOLOGÍAS DE LA INFORMACIÓN
+      </p>
+
+      <label htmlFor="proyecto" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+        Selecciona un Proyecto:
+      </label>
+      <select
+        id="proyecto"
+        value={selectedProyecto}
+        onChange={handleProyectoChange}
+        style={{
+          padding: '8px',
+          fontSize: '15px',
+          borderRadius: '6px',
+          border: '1px solid #ccc',
+          width: '100%',
+          maxWidth: '280px',
+          marginBottom: '1rem'
+        }}
+      >
+        <option value="">Seleccionar...</option>
+        {equipos.map((equipo) => (
+          <option key={equipo.name} value={equipo.name}>
+            {equipo.name}
+          </option>
+        ))}
+      </select>
+
+      <div style={{ marginBottom: '1rem', fontSize: '15px', color: '#444' }}>
+        <strong>Puntaje alcanzado:</strong> {puntaje}
+      </div>
+
+      <button
+        onClick={handleAumentarPuntaje}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#8b1e3b',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontSize: '15px',
+          transition: 'background 0.3s ease'
+        }}
+        onMouseOver={(e) => e.target.style.backgroundColor = '#a52a4a'}
+        onMouseOut={(e) => e.target.style.backgroundColor = '#8b1e3b'}
+      >
+        Registrar Puntaje
+      </button>
+    </div>
+  );
+};
+
+export default Formulario;
