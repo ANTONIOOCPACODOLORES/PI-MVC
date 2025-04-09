@@ -11,7 +11,10 @@ const io = new Server(server, {
   }
 });
 
-// Lista de equipos con logos y puntajes iniciales
+
+
+io.on('connection', (socket) => {
+  console.log('Cliente conectado');// Lista de equipos con logos y puntajes iniciales
 let equipos = [
   { name: 'BrightBloom', puntaje: 0, pictureSettings: { src: 'http://localhost:3000/images/Logo_Glow.png' }},
   { name: 'SmartPet Solutions', puntaje: 0, pictureSettings: { src: 'http://localhost:3000/images/Logo_Meow.jpg' }},
@@ -26,9 +29,6 @@ let equipos = [
   { name: 'MedikOS', puntaje: 0, pictureSettings: { src: 'http://localhost:3000/images/Logo_MedikOS.jpg' }}
 ];
 
-io.on('connection', (socket) => {
-  console.log('Cliente conectado');
-
   socket.emit('conexionInicial', equipos);
 
   socket.on('aumentarPuntaje', (index) => {
@@ -38,6 +38,16 @@ io.on('connection', (socket) => {
       io.emit('puntajeActualizado', equipos);
     }
   });
+
+   // Evento para registrar puntaje manual
+   socket.on('registrarPuntajeManual', ({ index, puntaje }) => {
+    if (equipos[index]) {
+      equipos[index].puntaje = puntaje; // Actualiza el puntaje manualmente
+      console.log(`Puntaje de ${equipos[index].name} actualizado a ${puntaje}`);
+      io.emit('puntajeActualizado', equipos); // Notificar a todos los clientes sobre la actualización
+    }
+  });
+
 
   socket.on('disconnect', () => {
     console.log('Cliente desconectado');
